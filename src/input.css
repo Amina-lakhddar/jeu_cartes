@@ -9,11 +9,22 @@ header{
     border-radius: 20%;
 }
 
+.avatar:focus{
+    border:2px solid black;
+}
+
+.focus {
+    border: 2px solid black;
+    outline: none;
+}
+
 .menu{
     /* bg-amber-600 p-1 rounded-xl px-2 */
-    background-color: orange;
+    background-color:#9B0F06;
     padding: 1px 4px 1px 4px;
     border-radius: 20%;
+    font-weight: bold;
+    font-family: "Redaction 35", serif;
 }
 
 
@@ -22,4 +33,22 @@ header{
     color: white;
     padding-inline: 10px;
     border-radius: 30%;
+}
+
+.message_success{
+    color: green;
+}
+
+.message_error{
+    color: red;
+}
+
+.success{
+    border: 3px solid green;
+    outline: none;
+}
+
+.error{
+     border: 3px solid red;
+     outline: none;
 }
