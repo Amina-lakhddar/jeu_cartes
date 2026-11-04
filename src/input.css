@@ -52,3 +52,18 @@ header{
      border: 3px solid red;
      outline: none;
 }
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url("https://img.freepik.com/premium-vector/poker-table-background-green-color_47243-1833.jpg");
+     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.info_partie{
+    color: #9B0F06;
+    font-size:large;
+}
