@@ -131,3 +131,16 @@ function jouer_cartes()  {
     }
 
 jouer_cartes()
+
+function duel(carteJoueur,carteOrdinateur){
+    if(carteJoueur===carteOrdinateur){
+        return "égalité";
+    }else if((carteJoueur === "Empereur" && carteOrdinateur === "Citoyen") ||
+            (carteJoueur === "Citoyen" && carteOrdinateur === "Esclave") ||
+            (carteJoueur === "Esclave" && carteOrdinateur === "Empereur")){
+                return "victoire";
+            }
+    else{
+        return "défaite";
+    }
+}
