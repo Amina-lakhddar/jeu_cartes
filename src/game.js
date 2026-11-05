@@ -83,7 +83,7 @@ let grille_ordinateur=document.querySelector(".main_ordinateur");
 
 function afficher_cartes_ordinateur(){
     main_ordinateur.forEach((carte)=>{
-        return grille_ordinateur.innerHTML+=`<img id=${carte.id} src="images/Dos de carte bleu à motifs géométriques.png" alt="" class=" w-20">`
+        return grille_ordinateur.innerHTML+=`<img data-id=${carte.id} src="images/Dos de carte bleu à motifs géométriques.png" alt="" class=" w-20">`
     })
 }
 afficher_cartes_ordinateur()
@@ -92,3 +92,42 @@ afficher_cartes_ordinateur()
 //     console.log(a)
 // })
 
+
+
+// jouer les cartes
+let choix_joueur=document.getElementById("carte_choisi_joueur");
+let choix_ordinateure=document.getElementById("carte_choisi_ordinateur");
+function jouer_cartes()  {    
+    grille_joueur.addEventListener("click",(event)=>{
+            if(event.target.tagName=="IMG"){
+                let carte_choisi=event.target;
+                carte_choisi.classList.add("w-full", "h-full", "object-cover")
+                choix_joueur.textContent="";
+                choix_joueur.append(carte_choisi)
+
+
+                // carte ordinateur
+                setTimeout(()=>{
+                    let index=Math.floor(Math.random()*main_ordinateur.length);
+                    let carte_choisi2=cartes.find((carte)=>{
+                        return carte.nom===main_ordinateur[index].name
+                    })
+            
+                    let img=document.createElement("img");
+                    img.src=carte_choisi2.image;
+                    img.classList.add("w-full", "h-full", "object-cover");
+                    choix_ordinateure.textContent=""
+                    choix_ordinateure.append(img);
+                    let images=document.querySelectorAll("img");
+                    images.forEach((img)=>{
+                        if(img.dataset.id==main_ordinateur[index].id){
+                            img.classList.add("hidden")
+                        }
+                    })
+
+                },2000)
+            }
+        })
+    }
+
+jouer_cartes()
