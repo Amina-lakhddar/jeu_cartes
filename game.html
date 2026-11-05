@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jeu des cartes</title>
+    <link rel="stylesheet" href="src/input.css">
+    <link rel="stylesheet" href="src/output.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Redaction+35:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <header class="w-full flex justify-around items-center ">
+            <img src="images/logo-jeu.jpg" alt="" class="w-20 h-20">
+            <h1 class="text-amber-400 font-bold font-['Redaction_35',serif] text-5xl">Jeu des cartes</h1>
+            <nav class="text-white flex flex-col gap-2 md:flex-row md:gap-2 lg:flex-row lg:gap-2  ">
+                <a href="game.html" class="menu">Jouer</a>
+                <a href="history.html" class="menu">Historique</a>
+                <a href="players.html" class="menu">Profil</a>
+            </nav>
+       
+    </header>
+    <main class="flex-1">
+        <div id="liste_joueurs">
+
+        </div>
+        <div class="main ">
+            <section class="grid grid-cols-3 bg-amber-200 rounded-xl m-2 p-1 md:flex md:justify-between md:gap-3 md:p-3 ">
+                <p class="info_partie">Manche : <span>1/12</span></p>
+                <p class="info_partie">Groupe : <span>1/4</span></p>
+                <p class="info_partie">Camp : <span id="camp">Empereur</span></p>
+                <p class="info_partie">Vous : <span>0</span></p>
+                <p class="info_partie">Ordinateur : <span>0</span></p>
+            </section>
+            <section class="flex justify-between mx-2">
+                <div class="ml-1">
+                    <h1 class="text-amber-300 text-bold bg-red-400 rounded-xl m-2 text-center text-lg">Votre main</h1>
+                    <div class="main_joueur grid grid-cols-3 gap-1">
+                        <img src="images/default.webp" alt="citoyen1" class="carte_joueur w-20">
+                        <img src="images/default.webp" alt="citoyen2" class="carte_joueur w-20">
+                        <img src="images/default.webp" alt="citoyen3" class="carte_joueur w-20">
+                        <img src="images/default.webp" alt="citoyen4" class="carte_joueur w-20">
+                        <img src="images/default.webp" alt="Empereur ou Esclave" class="carte_joueur w-20">
+                    </div>
+                </div>
+                <div class="ml-1">
+                    <h1 class="text-amber-300 bg-blue-500 m-2 rounded-xl text-bold text-center text-lg">Main d'Ordinateur</h1>
+                    <div class="main_ordinateur grid grid-cols-3 gap-1">
+                        
+                    </div>
+                </div>
+            </section>
+            <section class="flex justify-center items-center m-2">
+                <button class="bg-amber-300 p-2 rounded-xl shadow-xl/50">Commencer le jeu</button>
+            </section>
+            <section class="flex justify-around">
+                <img src="images/empereur.png" alt="card_vous">
+                <span class="text-amber-300 text-bold text-5xl flex self-center drop-shadow-[0_0_10px_rgba(251,191,36,0.9)] italic w-16">VS</span>
+                <img src="images/esclave.png" alt="card_ordinateur">
+            </section>
+            <section class="flex justify-center items-center">
+                <p class="bg-amber-300 inline-block p-1.5 m-2 rounded-xl shadow-xl/50">En attente de votre carte ...</p>
+            </section>
+        </div>
+    </main>
+    <footer class="bg-black text-white flex flex-col items-center justify-center ">
+        <h2 >
+            ♠ Empereur, Citoyen, Esclave ♣
+        </h2>
+
+        <hr class="border-0 border-t-2 h-2 border-amber-500">
+
+        <p>
+            © 2026 — Tous droits réservés
+        </p>
+
+        <p>
+            Créé avec passion ♥
+        </p>
+    </footer>
+    <script type="module" src="src/game.js"></script>
+</body>
+</html>
