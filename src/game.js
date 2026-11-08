@@ -1,6 +1,6 @@
 // import { joueurs,historique } from "./players.js";
 import { lire_joueurs } from "./storage.js";
-let cartes=[
+export let cartes=[
     {
         nom:"Empereur",
         image:"images/empereur.png"
@@ -15,10 +15,10 @@ let cartes=[
     }
 ];
 // tableau des cartes de joueur
-let main_ordinateur=[
+export let main_ordinateur=[
    {
-    id:"imp",
-    name:"Empereur"
+    id:"esc",
+    name:"esclave"
    },
     {
         id:"c1",
@@ -40,9 +40,9 @@ let main_ordinateur=[
 
 
 // tableau des cartes d'ordinateur
-let main_joueur=
+export let main_joueur=
 [
-    "esclave",
+    "Empereur",
     "citoyen",
     "citoyen",
     "citoyen",
@@ -52,41 +52,60 @@ let main_joueur=
 
 // le Camp
 let camp=document.getElementById("camp");
-if(camp.textContent==="Empereur"){
-    main_ordinateur[0].name="Empereur";
-    main_joueur[0]="esclave";
-}else{
-    main_ordinateur[0].name="esclave";
-    main_joueur[0]="Empereur";
-}
-
 
 
 // fonction afficher les cartes d'un joueur
-let grille_joueur=document.querySelector(".main_joueur");
-function afficher_cartes_joueur(){
+export let grille_joueur=document.querySelector(".main_joueur");
+export function afficher_cartes_joueur(){
+    if(!grille_joueur){
+        return;
+    }
     grille_joueur.innerHTML="";
-    cartes.forEach((carte)=>{
-        main_joueur.forEach((element)=>{
-            if(carte.nom===element){
-              return  grille_joueur.innerHTML+=`<img src=${carte.image} alt="" class="w-20">`
-            }
+    let carte;
+
+    copierJoueur.forEach((element)=>{
+        carte=cartes.find((c)=>{
+            return c.nom.toLocaleLowerCase()===element.toLocaleLowerCase();
         })
+        if(carte){
+        let img = document.createElement("img");
+
+            img.src = carte.image;
+            img.dataset.nom = carte.nom;
+            img.alt = carte.nom;
+
+            img.classList.add("w-20", "cursor-pointer");
+
+            grille_joueur.append(img);
+    }
     })
+
 }
-afficher_cartes_joueur();
+
 
 
 
 //fonction afficher les cartes d'ordinateur
-let grille_ordinateur=document.querySelector(".main_ordinateur");
+export let grille_ordinateur=document.querySelector(".main_ordinateur");
 
-function afficher_cartes_ordinateur(){
-    main_ordinateur.forEach((carte)=>{
-        return grille_ordinateur.innerHTML+=`<img data-id=${carte.id} src="images/Dos de carte bleu à motifs géométriques.png" alt="" class=" w-20">`
-    })
+export function afficher_cartes_ordinateur(){
+
+    if(!grille_ordinateur){
+        return;
+    }
+
+    grille_ordinateur.innerHTML = "";
+
+    copierOrdinateur.forEach(function(carte){
+        grille_ordinateur.innerHTML += `
+            <img data-id="${carte.id}"
+            src="images/Dos de carte bleu à motifs géométriques.png"
+            alt="Carte cachée"
+            class="w-20">
+        `;
+    });
 }
-afficher_cartes_ordinateur()
+
 // let carte_inverse=document.querySelectorAll(".main_ordinateur img");
 // carte_inverse.forEach((a)=>{
 //     console.log(a)
@@ -95,52 +114,241 @@ afficher_cartes_ordinateur()
 
 
 // jouer les cartes
-let choix_joueur=document.getElementById("carte_choisi_joueur");
-let choix_ordinateure=document.getElementById("carte_choisi_ordinateur");
-function jouer_cartes()  {    
+export let choix_joueur=document.getElementById("carte_choisi_joueur");
+export let choix_ordinateur=document.getElementById("carte_choisi_ordinateur");
+export let carteJoueur;
+export let carteOrdinateur;
+let duelEncours = false;
+export function jouer_cartes()  {  
+    if(!grille_joueur || !choix_joueur || !choix_ordinateur) {
+        return;
+    }
     grille_joueur.addEventListener("click",(event)=>{
-            if(event.target.tagName=="IMG"){
+
+            if(duelEncours || event.target.tagName!=="IMG"){
+                return;
+            }
+                duelEncours=true;
                 let carte_choisi=event.target;
-                carte_choisi.classList.add("w-full", "h-full", "object-cover")
+                carteJoueur=event.target.dataset.nom;
+                carte_choisi.classList.add("w-full", "h-full", "object-cover");
                 choix_joueur.textContent="";
                 choix_joueur.append(carte_choisi)
 
 
                 // carte ordinateur
                 setTimeout(()=>{
-                    let index=Math.floor(Math.random()*main_ordinateur.length);
-                    let carte_choisi2=cartes.find((carte)=>{
-                        return carte.nom===main_ordinateur[index].name
-                    })
-            
-                    let img=document.createElement("img");
-                    img.src=carte_choisi2.image;
-                    img.classList.add("w-full", "h-full", "object-cover");
-                    choix_ordinateure.textContent=""
-                    choix_ordinateure.append(img);
-                    let images=document.querySelectorAll("img");
-                    images.forEach((img)=>{
-                        if(img.dataset.id==main_ordinateur[index].id){
-                            img.classList.add("hidden")
-                        }
-                    })
+                    if(copierOrdinateur.length===0){
+                        duelEncours=false;
+                        return;
+                    }
+
+                    let index=Math.floor(Math.random()*copierOrdinateur.length);
+                    let carteChoisiOrdinateur=copierOrdinateur[index];
+                    carteOrdinateur=carteChoisiOrdinateur.name;
+                    let carteImage=cartes.find((carte)=>{
+                        return carte.nom.toLocaleLowerCase()===carteChoisiOrdinateur.name.toLocaleLowerCase();
+                    });
+
+                    if(carteImage){
+                        let img=document.createElement("img");
+                        img.src=carteImage.image;
+                        img.classList.add("w-full","h-full","object-cover");
+
+                        choix_ordinateur.textContent="";
+                        choix_ordinateur.append(img);
+
+                        // cacher la carte jouer (dos)
+                        let imagecachee=grille_ordinateur.querySelector(`[data-id="${carteChoisiOrdinateur.id}"]`);
+                        if(imagecachee){
+                            imagecachee.classList.add("hidden")
+                        };
+
+                        //comparer les deux cartes 
+                        setTimeout(lancerDuel,1500)
+                    }
 
                 },2000)
-            }
+            
         })
     }
 
-jouer_cartes()
 
-function duel(carteJoueur,carteOrdinateur){
-    if(carteJoueur===carteOrdinateur){
+
+// fonction duel comparer les cartes
+function duel(carteJoueur, carteOrdinateur) {
+
+    carteJoueur = carteJoueur.toLowerCase();
+    carteOrdinateur = carteOrdinateur.toLowerCase();
+
+    if (carteJoueur === carteOrdinateur) {
         return "égalité";
-    }else if((carteJoueur === "Empereur" && carteOrdinateur === "Citoyen") ||
-            (carteJoueur === "Citoyen" && carteOrdinateur === "Esclave") ||
-            (carteJoueur === "Esclave" && carteOrdinateur === "Empereur")){
-                return "victoire";
-            }
-    else{
+    }
+
+    else if (
+        (carteJoueur === "empereur" && carteOrdinateur === "citoyen") ||
+        (carteJoueur === "citoyen" && carteOrdinateur === "esclave") ||
+        (carteJoueur === "esclave" && carteOrdinateur === "empereur")
+    ) {
+        return "victoire";
+    }
+
+    else {
         return "défaite";
+    }
+}
+// copier les tableaux des cartes
+export let copierJoueur=[...main_joueur];
+export let copierOrdinateur=[...main_ordinateur];
+
+export let scoreJoueur=0;
+export let scoreOrdinateur=0;
+
+export let numeroManche=1;
+
+export function lancerDuel(){
+
+    let indexJoueur;
+    let indexOrdinateur;
+
+    let resultat = duel(carteJoueur, carteOrdinateur);
+    changerPremier();
+
+    if(resultat === "égalité"){
+
+        indexJoueur = copierJoueur.indexOf(carteJoueur);
+
+        indexOrdinateur = copierOrdinateur.findIndex(function(carte){
+            return carte.name === carteOrdinateur;
+        });
+
+        if(indexJoueur !== -1 && indexOrdinateur !== -1){
+
+            copierJoueur.splice(indexJoueur, 1);
+            copierOrdinateur.splice(indexOrdinateur, 1);
+        }
+
+        carteJoueur = undefined;
+        carteOrdinateur = undefined;
+
+        choix_joueur.textContent = "Votre carte ici";
+        choix_ordinateur.textContent = "Votre carte ici";
+
+        afficher_cartes_joueur();
+        afficher_cartes_ordinateur();
+
+        duelEncours = false;
+
+    }else if(resultat === "victoire"){
+
+        finManche("joueur");
+
+    }else{
+
+        finManche("ordinateur");
+    }
+}
+
+
+export function reinitialiserMains(){
+
+    copierJoueur = [...main_joueur];
+    copierOrdinateur = [...main_ordinateur];
+
+    choix_joueur.textContent = "Votre carte ici";
+    choix_ordinateur.textContent = "Votre carte ici";
+
+    afficher_cartes_joueur();
+    afficher_cartes_ordinateur();
+
+    duelEncours = false;
+}
+
+
+function changerCamp(){
+    let actuel = camp.textContent.trim();
+    if(actuel === "Empereur"){
+        camp.textContent = "Esclave";
+        main_joueur[0] = "Esclave";
+        main_ordinateur[0].name = "Empereur";
+    }else{
+        camp.textContent = "Empereur";
+        main_joueur[0] = "Empereur";
+        main_ordinateur[0].name = "Esclave";
+    }
+}
+export function finManche(gagnant){
+
+    let campJoueur = camp.textContent.trim();
+
+    if(gagnant === "joueur"){
+
+        if(campJoueur === "Empereur"){
+            scoreJoueur += 1;
+        }else{
+            scoreJoueur += 5;
+        }
+
+    }else{
+
+        if(campJoueur === "Empereur"){
+            scoreOrdinateur += 5;
+        }else{
+            scoreOrdinateur += 1;
+        }
+    }
+
+    document.getElementById("score_joueur").textContent = scoreJoueur;
+    document.getElementById("score_ordinateur").textContent = scoreOrdinateur;
+
+    numeroManche++;
+    if((numeroManche-1)%3===0 && numeroManche<=12){
+        changerCamp();
+    }
+
+    if(numeroManche > 12){
+
+        finPartie();
+
+        return;
+    };
+
+    afficherInfos();
+
+    setTimeout(reinitialiserMains,1500)
+}
+
+
+function afficherInfos(){
+    let manche =Math.min(numeroManche,12);
+    document.getElementById("manche").textContent=manche+"/12";
+    document.getElementById("groupe").textContent=Math.ceil(manche/3)+"/4";
+}
+
+
+let premier = "Empereur";
+
+function changerPremier(){
+    premier=premier === "Empereur" ? "Esclave" : "Empereur";
+    document.getElementById("premier").textContent=premier;
+
+};
+
+
+function finPartie(){
+    let message;
+    if(scoreJoueur > scoreOrdinateur){
+        message = "Vous avez gagné !";
+    }else if(scoreJoueur < scoreOrdinateur){
+        message = "L'ordinateur a gagné !";
+    }else{
+        message = "Égalité !";
+    }
+
+
+    alert(message + " Score : " + scoreJoueur + " - " + scoreOrdinateur);
+
+    if(confirm("Voulez-vous rejouer ?")){
+        location.reload();
     }
 }
