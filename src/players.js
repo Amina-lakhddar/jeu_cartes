@@ -1,4 +1,5 @@
-export let joueurs = JSON.parse(localStorage.getItem("joueurs")) || [];
+import { lire_joueurs, souvegarder_joueur } from "./storage.js";
+export let joueurs = lire_joueurs();
 export let historique = JSON.parse(localStorage.getItem("historique")) || [];
 
 
@@ -11,32 +12,33 @@ export let liste_avatar = document.querySelector(".liste_avatar");
 export let regexPseudo = /^[A-Za-z0-9]{3,15}$/;
 
 export function valider_joueur() {
-    form_profil.addEventListener("input", function (event) {
-        if (event.target.tagName === "INPUT") {
-            nickname = event.target;
-            let message = document.querySelector(".message-error");
-            if (regexPseudo.test(nickname.value)) {
-                message.textContent = "Pseudo Valide !";
-                message.classList.add("message_success");
-                message.classList.remove("message_error");
+    if(form_profil)
+        form_profil.addEventListener("input", function (event) {
+            if (event.target.tagName === "INPUT") {
+                nickname = event.target;
+                let message = document.querySelector(".message-error");
+                if (regexPseudo.test(nickname.value)) {
+                    message.textContent = "Pseudo Valide !";
+                    message.classList.add("message_success");
+                    message.classList.remove("message_error");
 
-                nickname.classList.add("success");
-                nickname.classList.remove("error");
-            } else {
-                message.textContent = "Pseudo Invalide !";
-                message.classList.remove("message_success");
-                message.classList.add("message_error");
+                    nickname.classList.add("success");
+                    nickname.classList.remove("error");
+                } else {
+                    message.textContent = "Pseudo Invalide !";
+                    message.classList.remove("message_success");
+                    message.classList.add("message_error");
 
-                nickname.classList.add("error");
-                nickname.classList.remove("success")
+                    nickname.classList.add("error");
+                    nickname.classList.remove("success")
+                }
+
             }
-
-        }
-    })
-
-    liste_avatar.addEventListener("click", function (event) {
-        source = event.target.getAttribute("src");
-    })
+        })
+        if(liste_avatar)
+            liste_avatar.addEventListener("click", function (event) {
+                source = event.target.getAttribute("src");
+            })
 }
 
 // Ajouter un joueur
@@ -64,7 +66,7 @@ export function ajouter_joueur() {
             createAt: new Date().toLocaleDateString("fr-FR")
         }
         joueurs.push(joueur);
-        localStorage.setItem("joueurs", JSON.stringify(joueurs));
+        souvegarder_joueur();
     }
     else {
         let message = document.querySelector(".error-valider-joueur");
@@ -73,10 +75,11 @@ export function ajouter_joueur() {
     }
 }
 export let btn_ajouter = document.querySelector(".ajouter_joueur");
-btn_ajouter.addEventListener("click", function () {
-    ajouter_joueur()
-    afficher_joueurs(joueurs)
-})
+if (btn_ajouter)
+    btn_ajouter.addEventListener("click", function () {
+        ajouter_joueur()
+        afficher_joueurs(joueurs)
+    })
 
 // Afficher tous les joueurs
 export let grille_joueurs = document.getElementById("liste_joueurs");
@@ -135,7 +138,7 @@ export function modifier_joueur() {
             if (regexPseudo.test(nickname.value) && source !== undefined && !isExist) {
                 joueur_modifier.name = nickname.value;
                 joueur_modifier.image = source;
-                localStorage.setItem("joueurs", JSON.stringify(joueurs));
+                souvegarder_joueur();
                 afficher_joueurs(joueurs)
                 avatars.forEach((avatar) => {
                     avatar.classList.remove("focus")
@@ -160,15 +163,15 @@ export function supprimer_joueur() {
             let indice = joueurs.findIndex(joueur => joueur.id === id)
             console.log(indice)
             if (confirmation) {
-                joueurs.splice(indice,1);
-                
+                joueurs.splice(indice, 1);
+
                 historique.forEach((partie) => {
                     partie.joueurs.forEach((joueur) => {
                         joueur.name = "joueur supprimé"
                     })
                 }
                 )
-                localStorage.setItem("joueurs", JSON.stringify(joueurs));
+                souvegarder_joueur();
                 localStorage.setItem("historique", JSON.stringify(historique));
                 afficher_joueurs(joueurs)
             }
@@ -179,15 +182,14 @@ export function supprimer_joueur() {
 
 //Selecter un joueur pour commencer le jeu
 export function selecter_joueur() {
-    grille_joueurs.addEventListener("click",(event)=>{
-        if(event.target.classList.contains("selectionner"))
-            {
-                let id=event.target.dataset.id;
-                let joueur_selectioner=joueurs.find(joueur=>
-                    joueur.id=id
+    grille_joueurs.addEventListener("click", (event) => {
+        if (event.target.classList.contains("selectionner")) {
+            let id = event.target.dataset.id;
+            let joueur_selectioner = joueurs.find(joueur =>
+                joueur.id = id
             )
-            let btn_selectionner=event.target;
-            btn_selectionner.textContent="selectionné";
+            let btn_selectionner = event.target;
+            btn_selectionner.textContent = "selectionné";
             btn_selectionner.classList.add("bg-green-500")
         }
     })
