@@ -12,32 +12,33 @@ export let liste_avatar = document.querySelector(".liste_avatar");
 export let regexPseudo = /^[A-Za-z0-9]{3,15}$/;
 
 export function valider_joueur() {
-    form_profil.addEventListener("input", function (event) {
-        if (event.target.tagName === "INPUT") {
-            nickname = event.target;
-            let message = document.querySelector(".message-error");
-            if (regexPseudo.test(nickname.value)) {
-                message.textContent = "Pseudo Valide !";
-                message.classList.add("message_success");
-                message.classList.remove("message_error");
+    if(form_profil)
+        form_profil.addEventListener("input", function (event) {
+            if (event.target.tagName === "INPUT") {
+                nickname = event.target;
+                let message = document.querySelector(".message-error");
+                if (regexPseudo.test(nickname.value)) {
+                    message.textContent = "Pseudo Valide !";
+                    message.classList.add("message_success");
+                    message.classList.remove("message_error");
 
-                nickname.classList.add("success");
-                nickname.classList.remove("error");
-            } else {
-                message.textContent = "Pseudo Invalide !";
-                message.classList.remove("message_success");
-                message.classList.add("message_error");
+                    nickname.classList.add("success");
+                    nickname.classList.remove("error");
+                } else {
+                    message.textContent = "Pseudo Invalide !";
+                    message.classList.remove("message_success");
+                    message.classList.add("message_error");
 
-                nickname.classList.add("error");
-                nickname.classList.remove("success")
+                    nickname.classList.add("error");
+                    nickname.classList.remove("success")
+                }
+
             }
-
-        }
-    })
-
-    liste_avatar.addEventListener("click", function (event) {
-        source = event.target.getAttribute("src");
-    })
+        })
+        if(liste_avatar)
+            liste_avatar.addEventListener("click", function (event) {
+                source = event.target.getAttribute("src");
+            })
 }
 
 // Ajouter un joueur
