@@ -1,5 +1,5 @@
 // import { joueurs,historique } from "./players.js";
-import { lire_joueurs } from "./storage.js";
+import { lire_joueurs ,ajouter_partie} from "./storage.js";
 export let cartes=[
     {
         nom:"Empereur",
@@ -308,7 +308,7 @@ export function finManche(gagnant){
 
     if(numeroManche > 12){
 
-        finPartie();
+       setTimeout(finPartie, 1500);
 
         return;
     };
@@ -336,19 +336,29 @@ function changerPremier(){
 
 
 function finPartie(){
-    let message;
-    if(scoreJoueur > scoreOrdinateur){
-        message = "Vous avez gagné !";
-    }else if(scoreJoueur < scoreOrdinateur){
-        message = "L'ordinateur a gagné !";
+    let resultat;
+    if(scoreJoueur>scoreOrdinateur){
+        resultat="Victoire";
+    }else if(scoreJoueur<scoreOrdinateur){
+        resultat="Défaite"
     }else{
-        message = "Égalité !";
+        resultat="Égalité"
     }
 
+    //enregisrer la partie dans l historique 
+    ajouter_partie({
+        date:new Date().toLocaleString("fr-FR"),
+        joueur:"joueur",
+        scoreJoueur:scoreJoueur,
+        scoreOrdinateur:scoreOrdinateur,
+        resultat:resultat
+    });
 
-    alert(message + " Score : " + scoreJoueur + " - " + scoreOrdinateur);
-
+    alert(resultat+"!Score : "+scoreJoueur+" - "+scoreOrdinateur);
     if(confirm("Voulez-vous rejouer ?")){
-        location.reload();
+        location.reload()
     }
 }
+
+
+
