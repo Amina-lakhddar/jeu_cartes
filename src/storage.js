@@ -6,6 +6,15 @@ export function souvegarder_joueur(){
 
 
 export function lire_joueurs(){
-    return JSON.parse(localStorage.getItem("joueurs") || [])
+    return JSON.parse(localStorage.getItem("joueurs")) || [];
 }
 
+export function lire_historique(){
+    return JSON.parse(localStorage.getItem("historique")) || [];
+}
+
+export function ajouter_partie(partie){
+    let historique=lire_historique();
+    historique.push(partie);
+    localStorage.setItem("historique",JSON.stringify(historique));
+}
